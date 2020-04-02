@@ -1,0 +1,1 @@
+select genre from list;
