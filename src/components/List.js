@@ -2,19 +2,28 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import Genres from './Genres'
 import { Switch, Route, Link } from 'react-router-dom'
+import store from '../dux/store'
+import {GET_MOVIES} from '../dux/store'
 
 export default class List extends Component {
     constructor() {
         super()
+        const reduxState = store.getState()
         this.state = {
-            list: [{}, {}, {}]
+            list: reduxState.movies,
+            update: false
         }
     }
 
     componentDidMount() {
         axios.get('/api/movies').then(res => {
-            this.setState({ list: res.data })
-        })
+            this.saveMovies(res.data)
+            this.setState({update: !this.state.update})
+            })
+    }
+
+    saveMovies=(list)=>{
+        store.dispatch({type: GET_MOVIES, payload: list })
     }
 
     render() {
